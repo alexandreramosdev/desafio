@@ -1,0 +1,51 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
+export default function DesafioPokerPresenca() {
+  const totalDias = 21;
+  const [diaAtual, setDiaAtual] = useState(1);
+  const [checkins, setCheckins] = useState(Array(totalDias).fill(null).map(() => ({ meditacao: false, alcool: false, grind: false, estudo: false, pcRegrado: false, obs: "" })));
+
+  const marcar = (campo) => {
+    const novosCheckins = [...checkins];
+    novosCheckins[diaAtual - 1][campo] = !novosCheckins[diaAtual - 1][campo];
+    setCheckins(novosCheckins);
+  };
+
+  const atualizarObs = (texto) => {
+    const novosCheckins = [...checkins];
+    novosCheckins[diaAtual - 1].obs = texto;
+    setCheckins(novosCheckins);
+  };
+
+  return (
+    <div className="max-w-xl mx-auto p-4 space-y-4">
+      <h1 className="text-2xl font-bold text-center">Desafio Poker + Presença</h1>
+      <h2 className="text-center text-muted-foreground">Dia {diaAtual} de {totalDias}</h2>
+
+      <Card>
+        <CardContent className="p-4 space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant={checkins[diaAtual - 1].meditacao ? "default" : "outline"} onClick={() => marcar("meditacao")}>Meditação</Button>
+            <Button variant={checkins[diaAtual - 1].alcool ? "destructive" : "outline"} onClick={() => marcar("alcool")}>Álcool (❌)</Button>
+            <Button variant={checkins[diaAtual - 1].grind ? "default" : "outline"} onClick={() => marcar("grind")}>Grind</Button>
+            <Button variant={checkins[diaAtual - 1].estudo ? "default" : "outline"} onClick={() => marcar("estudo")}>Estudo</Button>
+            <Button variant={checkins[diaAtual - 1].pcRegrado ? "default" : "outline"} onClick={() => marcar("pcRegrado")}>Uso do PC</Button>
+          </div>
+          <Textarea
+            placeholder="Observações do dia..."
+            value={checkins[diaAtual - 1].obs}
+            onChange={(e) => atualizarObs(e.target.value)}
+          />
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-between">
+        <Button disabled={diaAtual === 1} onClick={() => setDiaAtual(diaAtual - 1)}>◀ Dia {diaAtual - 1}</Button>
+        <Button disabled={diaAtual === totalDias} onClick={() => setDiaAtual(diaAtual + 1)}>Dia {diaAtual + 1} ▶</Button>
+      </div>
+    </div>
+  );
+}
